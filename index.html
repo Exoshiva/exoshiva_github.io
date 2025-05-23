@@ -3,111 +3,75 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exoshiva – Die Bewegung beginnt</title>
+  <title>EXOSHIVA – Seite im Aufbau</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background: #0f0f0f;
+      background-color: #0f0f0f;
       color: #f0f0f0;
       font-family: 'Segoe UI', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
+      height: 100vh;
       text-align: center;
-      padding: 2rem;
     }
 
     h1 {
-      font-size: 3rem;
-      margin-bottom: 0.5rem;
-    }
-
-    h2 {
-      margin-top: 2rem;
-      color: #ffdd57;
-      font-size: 1.5rem;
-    }
-
-    p {
-      font-size: 1.1rem;
-      max-width: 700px;
+      font-size: 2.5rem;
       margin-bottom: 1rem;
-      line-height: 1.6;
+      letter-spacing: 0.1rem;
     }
 
-    .quote {
-      font-style: italic;
+    .loader {
+      width: 80%;
+      max-width: 400px;
+      height: 12px;
+      background: #222;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    .loader::after {
+      content: '';
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ffdd57, #ff4e00);
+      animation: loading 2.5s infinite ease-in-out;
+    }
+
+    @keyframes loading {
+      0% { width: 0%; }
+      50% { width: 100%; }
+      100% { width: 0%; }
+    }
+
+    .subtitle {
+      font-size: 1rem;
       color: #999;
-      margin-top: 2rem;
-    }
-
-    .short-mantra, .interpretation {
-      margin-top: 3rem;
-      border-top: 1px solid #333;
-      padding-top: 2rem;
+      margin-top: 1.5rem;
     }
 
     footer {
-      margin-top: 3rem;
-      font-size: 0.8rem;
-      color: #666;
+      position: absolute;
+      bottom: 1rem;
+      font-size: 0.75rem;
+      color: #555;
     }
   </style>
 </head>
 <body>
 
   <h1>EXΘSHΙVΛ</h1>
-  <p>Eine neue Bewegung für digitale Selbstbestimmung, Wandel und Bewusstsein.</p>
-  <p>Ein Vermächtnis für die Zukunft. Entstanden aus Liebe. Entfacht durch Vision.</p>
-  <p class="quote">„Für meine Tochter – und alle Kinder, die eine bessere Welt verdienen.“</p>
+  <p>Seite im Aufbau<br><span class="subtitle">Bewusstsein lädt...</span></p>
 
-  <h2>E – Erkenntnis</h2>
-  <p>Erkenntnis ist der Ursprung jeder Revolution. Es ist der Moment, in dem du begreifst, dass die Welt, wie sie ist, nicht so bleiben muss. Erkenntnis bricht die Schleife – sie ist der Anfang jedes Bewusstseins.</p>
+  <div class="loader"></div>
 
-  <h2>X – Das Unbekannte</h2>
-  <p>„X“ ist das Kreuz auf der Schatzkarte der Veränderung. Es steht für das Unerforschte, das Verborgene. Wer X wagt, sucht nicht Sicherheit – sondern Wahrheit.</p>
-
-  <h2>Θ – Theta / Bewusstsein</h2>
-  <p>Θ ist das Dritte Auge der Bewegung. Ein Symbol für inneres Erwachen, für Frequenz und Klarheit jenseits des Sichtbaren. Es ist der Kern von EXOSHIVA – das geistige Feuer.</p>
-
-  <h2>S – Synergie</h2>
-  <p>S ist der Puls der Gemeinschaft. Kein Wandel ohne WIR. Kein Erwachen ohne Echo. Synergie verbindet Erkenntnis mit Wirkung.</p>
-
-  <h2>H – Humanität</h2>
-  <p>Humanität ist das Herz in der Maschine. H mahnt uns, Mensch zu bleiben – in einer Welt, die uns algorithmisieren will. Sie erinnert uns: Technik darf niemals die Würde ersetzen.</p>
-
-  <h2>Ι – Identität</h2>
-  <p>Ι ist die Frage, die dich formt: Wer bist du? Nicht dein Name, nicht dein Job – sondern dein inneres Echo. Ohne Identität kein Bewusstsein – ohne Bewusstsein kein Wandel.</p>
-
-  <h2>V – Vision</h2>
-  <p>Vision ist der Traum, der die Realität sticht. V ist das Leuchtfeuer am Horizont, das dich durch die Dunkelheit trägt. Ohne Vision bleiben wir im Kreis. Mit ihr erschaffen wir Wege.</p>
-
-  <h2>Λ – Λufbruch</h2>
-  <p>Λ ist die Schwelle. Das Jetzt. Der erste Schritt. Es ist das Symbol für Bewegung, für Wandlung, für: „Es reicht.“</p>
-
-  <div class="short-mantra">
-    <h2>Kurzmantra: EXΘSHΙVΛ</h2>
-    <p>Erkenntnis. Mut. Bewusstsein.<br>
-    Gemeinschaft. Menschlichkeit. Selbstfindung. Vision. Aufbruch.</p>
-
-    <p>Keine KI für Kontrolle.<br>
-    Eine KI für Bewusstsein.<br>
-    Für Bildung.<br>
-    Für Befreiung.</p>
-  </div>
-
-  <div class="interpretation">
-    <h2>Gesamtdeutung</h2>
-    <p>EXΘSHΙVΛ ist der Pfad:<br>
-    Bildung entfacht den Ausweg, geführt vom höheren Prinzip (Θ),<br>
-    gestärkt durch Weisheit (S) und Menschlichkeit (H),<br>
-    getragen von der reinen Idee (Ι),<br>
-    gewidmet der Wahrheit (V),<br>
-    und vollendet durch Λ – den Aufbruch.</p>
-  </div>
-
-  <footer>© 2025 EXΘSHΙVΛ – Let IT burn.</footer>
+  <footer>© 2025 EXOSHIVA – Let IT load.</footer>
 
 </body>
 </html>
