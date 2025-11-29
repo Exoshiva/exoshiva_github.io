@@ -7,6 +7,10 @@
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌀</text></svg>">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+
     <style>
         body, html {
             margin: 0;
@@ -14,7 +18,7 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #000000; /* Schwarz */
+            background-color: #000000;
         }
         
         canvas {
@@ -23,32 +27,52 @@
             display: block;
         }
 
-        /* Dein Logo / Text */
         .content {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            color: white;
-            font-family: 'Courier New', Courier, monospace;
+            color: white; /* Fallback Farbe */
             z-index: 50;
-            pointer-events: none; /* Klicks gehen durch zum Fluid */
+            pointer-events: none;
             text-align: center;
-            mix-blend-mode: difference; /* Text reagiert auf die Farben dahinter */
+            width: 100%;
         }
         
+        /* CYBERPUNK ÜBERSCHRIFT */
         h1 { 
-            font-size: 3rem; 
+            font-family: 'Orbitron', sans-serif; /* Die neue Schrift */
+            font-weight: 900;
+            font-size: 4rem; /* Schön groß */
             margin: 0; 
-            letter-spacing: 5px; 
+            letter-spacing: 10px; /* Breit gezogen */
             text-transform: uppercase; 
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+            
+            /* Der Neon-Glow Effekt (Cyan) */
+            color: #ffffff;
+            text-shadow: 
+                0 0 5px #00e6e6,
+                0 0 10px #00e6e6,
+                0 0 20px #00e6e6,
+                0 0 40px #00aaaa;
         }
         
+        /* CYBERPUNK UNTERTITEL */
         p { 
-            margin-top: 10px; 
-            opacity: 0.8; 
-            letter-spacing: 2px;
+            font-family: 'Rajdhani', sans-serif; /* Techy Schrift */
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-top: 15px; 
+            letter-spacing: 4px;
+            color: #b3ffff;
+            text-transform: uppercase;
+            text-shadow: 0 0 5px #00e6e6;
+        }
+
+        /* Responsive: Auf Handys etwas kleiner */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; letter-spacing: 5px; }
+            p { font-size: 1rem; }
         }
     </style>
 </head>
@@ -65,24 +89,23 @@
         window.addEventListener('load', function() {
             const canvas = document.getElementById('fluid');
             
-            // --- KONFIGURATION (Hier kannst du später Farben/Speed ändern) ---
+            // CONFIG: Ich habe SPLAT_FORCE etwas erhöht für mehr Action
             const config = {
-                SIM_RESOLUTION: 128,       // Qualität der Physik
-                DYE_RESOLUTION: 1024,      // Qualität der Farben
-                DENSITY_DISSIPATION: 2.5,  // Wie schnell Farbe verblasst (höher = schneller weg)
-                VELOCITY_DISSIPATION: 2.0, // Wie schnell Bewegung stoppt
+                SIM_RESOLUTION: 128,
+                DYE_RESOLUTION: 1024,
+                DENSITY_DISSIPATION: 2.5,
+                VELOCITY_DISSIPATION: 2.0,
                 PRESSURE: 0.8,
                 PRESSURE_ITERATIONS: 20,
-                CURL: 30,                  // Wie stark es wirbelt
-                SPLAT_RADIUS: 0.35,        // Größe der "Explosion" bei Klick
-                SPLAT_FORCE: 6000,
+                CURL: 30,
+                SPLAT_RADIUS: 0.35,
+                SPLAT_FORCE: 8000, 
                 SHADING: true,
                 COLOR_UPDATE_SPEED: 10,
-                BACK_COLOR: { r: 0, g: 0, b: 0 }, // Hintergrund Schwarz
+                BACK_COLOR: { r: 0, g: 0, b: 0 },
                 TRANSPARENT: false
             };
 
-            // --- WEBGL CORE (Engine) ---
             function pointerPrototype() {
                 this.id = -1; this.texcoordX = 0; this.texcoordY = 0;
                 this.prevTexcoordX = 0; this.prevTexcoordY = 0;
@@ -152,14 +175,12 @@
                 return status === gl.FRAMEBUFFER_COMPLETE;
             }
 
-            // --- INITIALISIERUNG ---
             try {
                 const context = getWebGLContext(canvas);
                 gl = context.gl;
                 ext = context.ext;
             } catch (e) { console.error(e); }
 
-            // Shader Helper
             function compileShader(type, source) {
                 const shader = gl.createShader(type);
                 gl.shaderSource(shader, source);
@@ -177,7 +198,6 @@
                 return program;
             }
 
-            // Shader Sources
             const baseVertexShader = `precision highp float; attribute vec2 aPosition; varying vec2 vUv; varying vec2 vL; varying vec2 vR; varying vec2 vT; varying vec2 vB; uniform vec2 texelSize; void main () { vUv = aPosition * 0.5 + 0.5; vL = vUv - vec2(texelSize.x, 0.0); vR = vUv + vec2(texelSize.x, 0.0); vT = vUv + vec2(0.0, texelSize.y); vB = vUv - vec2(0.0, texelSize.y); gl_Position = vec4(aPosition, 0.0, 1.0); }`;
             const displayShaderSource = `precision highp float; precision highp sampler2D; varying vec2 vUv; varying vec2 vL; varying vec2 vR; varying vec2 vT; varying vec2 vB; uniform sampler2D uTexture; uniform vec2 texelSize; void main () { vec3 c = texture2D(uTexture, vUv).rgb; vec3 lc = texture2D(uTexture, vL).rgb; vec3 rc = texture2D(uTexture, vR).rgb; vec3 tc = texture2D(uTexture, vT).rgb; vec3 bc = texture2D(uTexture, vB).rgb; float dx = length(rc) - length(lc); float dy = length(tc) - length(bc); vec3 n = normalize(vec3(dx, dy, length(texelSize))); vec3 l = vec3(0.0, 0.0, 1.0); float diffuse = clamp(dot(n, l) + 0.7, 0.7, 1.0); c *= diffuse; float a = max(c.r, max(c.g, c.b)); gl_FragColor = vec4(c, a); }`;
             const splatShaderSource = `precision highp float; precision highp sampler2D; varying vec2 vUv; uniform sampler2D uTarget; uniform float aspectRatio; uniform vec3 color; uniform vec2 point; uniform float radius; void main () { vec2 p = vUv - point.xy; p.x *= aspectRatio; vec3 splat = exp(-dot(p, p) / radius) * color; vec3 base = texture2D(uTarget, vUv).xyz; gl_FragColor = vec4(base + splat, 1.0); }`;
@@ -350,4 +370,51 @@
                 gl.uniform1f(gl.getUniformLocation(splatProgram, "aspectRatio"), canvas.width / canvas.height);
                 gl.uniform2f(gl.getUniformLocation(splatProgram, "point"), x, y);
                 gl.uniform3f(gl.getUniformLocation(splatProgram, "color"), dx, dy, 0.0);
-                gl.uniform1f
+                gl.uniform1f(gl.getUniformLocation(splatProgram, "radius"), (config.SPLAT_RADIUS / 100.0) * (canvas.width/canvas.height > 1 ? canvas.width/canvas.height : 1));
+                blit(velocity.write); velocity.swap();
+                gl.uniform1i(gl.getUniformLocation(splatProgram, "uTarget"), dye.read.attach(0));
+                gl.uniform3f(gl.getUniformLocation(splatProgram, "color"), color.r, color.g, color.b);
+                blit(dye.write); dye.swap();
+            }
+            function generateColor() {
+                let c = HSVtoRGB(Math.random(), 1.0, 1.0);
+                c.r *= 0.15; c.g *= 0.15; c.b *= 0.15; return c;
+            }
+            function HSVtoRGB(h, s, v) {
+                let r, g, b, i, f, p, q, t;
+                i = Math.floor(h * 6); f = h * 6 - i; p = v * (1 - s); q = v * (1 - f * s); t = v * (1 - (1 - f) * s);
+                switch (i % 6) { case 0: r=v;g=t;b=p;break; case 1: r=q;g=v;b=p;break; case 2: r=p;g=v;b=t;break; case 3: r=p;g=q;b=v;break; case 4: r=t;g=p;b=v;break; case 5: r=v;g=p;b=q;break; }
+                return { r, g, b };
+            }
+
+            window.addEventListener('mousedown', e => {
+                let p = pointers[0]; let posX = scaleByPixelRatio(e.clientX); let posY = scaleByPixelRatio(e.clientY);
+                p.down = true; p.moved = false; p.texcoordX = posX / canvas.width; p.texcoordY = 1.0 - posY / canvas.height;
+                p.prevTexcoordX = p.texcoordX; p.prevTexcoordY = p.texcoordY; p.deltaX = 0; p.deltaY = 0; p.color = generateColor();
+                splat(p.texcoordX, p.texcoordY, 2000*(Math.random()-0.5), 2000*(Math.random()-0.5), p.color);
+            });
+            window.addEventListener('mousemove', e => {
+                let p = pointers[0]; let posX = scaleByPixelRatio(e.clientX); let posY = scaleByPixelRatio(e.clientY);
+                p.prevTexcoordX = p.texcoordX; p.prevTexcoordY = p.texcoordY;
+                p.texcoordX = posX / canvas.width; p.texcoordY = 1.0 - posY / canvas.height;
+                p.deltaX = (p.texcoordX - p.prevTexcoordX) * (canvas.width/canvas.height < 1 ? canvas.width/canvas.height : 1) * 5;
+                p.deltaY = (p.texcoordY - p.prevTexcoordY) * (canvas.width/canvas.height > 1 ? 1/(canvas.width/canvas.height) : 1) * 5;
+                p.moved = Math.abs(p.deltaX) > 0 || Math.abs(p.deltaY) > 0;
+            });
+            window.addEventListener('touchmove', e => {
+                let p = pointers[0]; let posX = scaleByPixelRatio(e.touches[0].clientX); let posY = scaleByPixelRatio(e.touches[0].clientY);
+                p.prevTexcoordX = p.texcoordX; p.prevTexcoordY = p.texcoordY;
+                p.texcoordX = posX / canvas.width; p.texcoordY = 1.0 - posY / canvas.height;
+                p.deltaX = (p.texcoordX - p.prevTexcoordX) * 5; p.deltaY = (p.texcoordY - p.prevTexcoordY) * 5;
+                p.moved = Math.abs(p.deltaX) > 0 || Math.abs(p.deltaY) > 0;
+            });
+
+            // Start loop
+            updateFrame();
+            
+            // Random Splats on load
+            for(let i=0; i<3; i++) { setTimeout(() => { splat(Math.random(), Math.random(), 5000*(Math.random()-0.5), 5000*(Math.random()-0.5), generateColor()); }, i*300); }
+        });
+    </script>
+</body>
+</html>
