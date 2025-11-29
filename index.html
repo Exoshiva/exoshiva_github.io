@@ -1,77 +1,88 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EXOSHIVA – Seite im Aufbau</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #0f0f0f;
-      color: #f0f0f0;
-      font-family: 'Segoe UI', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      text-align: center;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EXOSHIVA - Fluid Test</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Verhindert Scrollbalken */
+            background-color: #000;
+        }
 
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      letter-spacing: 0.1rem;
-    }
+        /* Die Leinwand für den Effekt */
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
 
-    .loader {
-      width: 80%;
-      max-width: 400px;
-      height: 12px;
-      background: #222;
-      border-radius: 6px;
-      overflow: hidden;
-      margin-top: 1rem;
-    }
-
-    .loader::after {
-      content: '';
-      display: block;
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #ffdd57, #ff4e00);
-      animation: loading 2.5s infinite ease-in-out;
-    }
-
-    @keyframes loading {
-      0% { width: 0%; }
-      50% { width: 100%; }
-      100% { width: 0%; }
-    }
-
-    .subtitle {
-      font-size: 1rem;
-      color: #999;
-      margin-top: 1.5rem;
-    }
-
-    footer {
-      position: absolute;
-      bottom: 1rem;
-      font-size: 0.75rem;
-      color: #555;
-    }
-  </style>
+        /* Dein Content liegt ÜBER dem Effekt */
+        .content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-family: monospace;
+            z-index: 10; /* Wichtig: Content muss höher liegen als Canvas */
+            pointer-events: none; /* Lässt Mausklicks zum Fluid durch */
+            text-align: center;
+        }
+        
+        h1 { font-size: 3rem; margin-bottom: 0.5rem; }
+    </style>
 </head>
 <body>
 
-  <h1>EXΘSHΙVΛ</h1>
+    <div class="content">
+        <h1>EXOSHIVA</h1>
+        <p>System Online.</p>
+    </div>
+
+    <canvas id="fluid-canvas"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/webgl-fluid-simulation@latest/dist/webgl-fluid-simulation.min.js"></script>
+
+    <script>
+        // Hier ist der JavaScript Teil
+        // Wir warten, bis die externe Bibliothek geladen ist
+        window.addEventListener('load', function() {
+            
+            // Konfiguration basierend auf deinem Bild
+            const config = {
+                SIM_RESOLUTION: 128,       // Auflösung der Physik-Berechnung (niedriger = schneller)
+                DYE_RESOLUTION: 1024,      // Auflösung der Farben (höher = schärfer)
+                CAPTURE_RESOLUTION: 512,
+                DENSITY_DISSIPATION: 1,    // Wie schnell sich der "Rauch" auflöst
+                VELOCITY_DISSIPATION: 0.2, // Wie schnell die Bewegung stoppt
+                PRESSURE: 0.8,
+                PRESSURE_ITERATIONS: 20,
+                CURL: 30,                  // Wie stark es "wirbelt"
+                SPLAT_RADIUS: 0.25,
+                SPLAT_FORCE: 6000,
+                SHADING: true,
+                COLOR_UPDATE_SPEED: 10,
+                BACK_COLOR: { r: 0, g: 0, b: 0 }, // Schwarz als Hintergrund
+                TRANSPARENT: false
+            };
+
+            // Initialisierung der Simulation auf dem Canvas
+            // Hinweis: Die genaue Syntax hängt von der verwendeten Library ab.
+            // Dies hier nutzt "webgl-fluid-simulation" als Beispiel.
+            webGLFluidSimulation(document.getElementById('fluid-canvas'), config);
+        });
+    </script>
+    <h1>EXΘSHΙVΛ</h1>
   <p>Seite im Aufbau<br><span class="subtitle">Bewusstsein lädt...</span></p>
 
   <div class="loader"></div>
 
   <footer>© 2025 EXOSHIVA – Let IT load.</footer>
-
 </body>
 </html>
+ 
